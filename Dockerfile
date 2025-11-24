@@ -1,7 +1,6 @@
 FROM golang:1.21 AS build-env
 WORKDIR /go/src/trash-levels/
 COPY ./main.go /go/src/trash-levels/
-RUN go mod init example.com/trash-levels
 RUN go mod init example.com/trash-levels && \
     go mod tidy && \
     go build -tags netgo -o trash-levels main.go
