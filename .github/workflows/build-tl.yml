@@ -16,10 +16,8 @@ jobs:
         go-version: '1.21'
     - name: Prep modules
       run: |
-        go mod init example.com/trash-levels 
-        go get github.com/gorilla/mux 
-        go get github.com/prometheus/client_golang/prometheus
-        go get github.com/prometheus/client_golang/prometheus/promhttp
+        go mod init example.com/trash-levels
+        go mod tidy
     - name: Build
       run: go build -v main.go
 
@@ -31,6 +29,8 @@ jobs:
     - name: Build and export Docker
       uses: docker/build-push-action@v6
       with:
+        context: .
+        file: ./Dockerfile
         load: true
         tags: ${{ env.TEST_TAG }}
     - name: Test
