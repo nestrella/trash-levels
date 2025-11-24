@@ -1,0 +1,37 @@
+name: Go Build Check
+on:
+  push:
+
+env:
+  TEST_TAG: ${{ github.event.repository.name }}/trash-level:test
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: Set Up Go
+      uses: actions/setup-go@v4
+      with:
+        go-version: '1.21'
+    - name: Prep modules
+      run: |
+        go mod init example.com/trash-levels && \
+        go get github.com/gorilla/mux/ && \
+        go get github.com/prometheus/client_golang/prometheus && \
+        go get github.com/prometheus/client_golang/prometheus/promhttp
+    - name: Build
+      run: go build -v main.go
+
+  containerize:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+    - name: Build and export Doker
+      uses: docker/build-push-action@v6
+      with:
+        load: trueß
+        tag: ${{ env.TEST_TAG }}
+    - name: Test
+      run: |
+        docker image ls
