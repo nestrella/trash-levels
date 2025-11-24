@@ -30,7 +30,7 @@ jobs:
     - name: Build and export Doker
       uses: docker/build-push-action@v6
       with:
-        load: trueß
+        load: true
         tag: ${{ env.TEST_TAG }}
     - name: Test
       run: |
